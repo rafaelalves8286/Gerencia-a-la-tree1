@@ -169,3 +169,4 @@ Coloque o arquivo `logo-boteco-da-arvore.jpg` dentro da pasta `public/assets/`.
 - localStorage como modelos salvos do cardápio e como fallback automático do
   Cardápio quando o Firestore está indisponível (modo offline)
 
+# Gerencia-a-la-tree1
