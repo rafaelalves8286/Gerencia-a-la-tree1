@@ -1,172 +1,189 @@
-# Boteco da Árvore — Gerenciamento de Cardápio (Angular + Firestore)
+# Gerência À La Tree
 
-Projeto Angular 19 com integração ao **Firebase Firestore**, contendo as telas de
-**Cardápio**, **Estoque**, **Fornecedores** e **Administradores**.
+Sistema web desenvolvido para gerenciamento de restaurantes, permitindo o controle de cardápio, estoque de ingredientes e integração com Firebase Firestore.
 
-## ⚠️ Antes de rodar: configure o Firebase
+## 📋 Descrição
 
-1. Crie um projeto em [console.firebase.google.com](https://console.firebase.google.com)
-2. Ative o **Firestore Database** (Compilação → Firestore Database → Criar banco de dados → modo de teste)
-3. Em Configurações do projeto → Seus aplicativos → adicione um app Web (`</>`) e copie o `firebaseConfig`
-4. Cole essas credenciais em `src/environments/environment.ts`
+O Gerência À La Tree foi desenvolvido para auxiliar na administração de estabelecimentos gastronômicos, centralizando informações de pratos, ingredientes e estoque em uma única plataforma.
 
-Sem isso, as telas de Administradores, Estoque e Fornecedores vão mostrar
-uma mensagem de erro de conexão. O **Cardápio** é a exceção: ele detecta a
-falta de conexão automaticamente e continua funcionando em modo offline local
-(veja a seção abaixo).
+O sistema utiliza Angular no frontend e Firebase Firestore como banco de dados em nuvem, permitindo armazenamento e sincronização em tempo real.
 
-## Ingredientes e controle de estoque por prato
+---
 
-Ao criar ou editar um item do Cardápio, o formulário tem duas abas:
+## 🚀 Funcionalidades
 
-- **Detalhes**: foto, nome, descrição, categorias, preço e dias da semana (como antes).
-- **Ingredientes**: opcional. Aqui você vincula itens já cadastrados no **Estoque**
-  e informa quanto cada porção do prato consome (ex: Picanha ao Molho de Alho
-  consome 0.5 kg de Picanha por porção).
+### Cardápio
 
-Regras:
+- Cadastro de pratos
+- Edição e exclusão de pratos
+- Controle de disponibilidade
+- Cadastro de descrição e preço
+- Upload e exibição de imagens
+- Organização por categorias
 
-- Prato **sem** ingredientes vinculados → fica sempre disponível no cardápio e
-  nunca mexe no estoque. Útil para cadastrar o prato rápido e completar os
-  ingredientes depois.
-- Prato **com** ingredientes vinculados → o cardápio mostra quantas porções
-  ainda dá pra preparar com o estoque atual, calculado a partir do ingrediente
-  mais escasso. Quando chega a 0 porções, o prato fica marcado como
-  "Ingredientes esgotados" e o botão de pedido é bloqueado.
-- O botão de carrinho 🛒 no card do prato (só aparece em pratos com ingredientes
-  vinculados) registra um pedido: desconta a quantidade de cada ingrediente do
-  Estoque (Firestore) e atualiza a contagem de porções na hora.
+### Estoque
 
-## Cardápio no Firestore (com modo offline automático)
+- Cadastro de ingredientes
+- Controle de quantidade disponível
+- Controle de unidade de medida
+- Atualização de estoque em tempo real
 
-O Cardápio (pratos + ingredientes) é salvo na coleção **`cardapio`** do Firestore.
-Isso permite, no futuro, ler os mesmos pratos a partir de outra tela ou app
-(ex: um cardápio público para o cliente, um app de pedidos, etc).
+### Integração entre Cardápio e Estoque
 
-O app **não depende** do Firebase estar configurado para funcionar:
+- Associação de ingredientes aos pratos
+- Definição da quantidade necessária de cada ingrediente
+- Estrutura preparada para baixa automática de estoque conforme pedidos realizados
 
-- Se a conexão com o Firestore funcionar normalmente, o Cardápio lê e grava
-  direto na coleção `cardapio` em tempo real (qualquer mudança aparece na hora
-  em todos os dispositivos conectados).
-- Se o Firebase não estiver configurado (`environment.ts` com os valores de
-  exemplo) ou a conexão falhar por qualquer motivo, o app detecta isso
-  automaticamente e passa a salvar os pratos só no navegador local
-  (`localStorage`), sem travar nem mostrar erro feio — aparece apenas um aviso
-  discreto no topo: **"Cardápio em modo offline — salvando apenas neste
-  dispositivo"**. Assim que o Firebase voltar a funcionar (em uma próxima
-  visita), o Cardápio volta a usar a nuvem normalmente.
+### Firebase Firestore
 
-O **Estoque** continua sempre dependendo do Firestore (sem fallback offline),
-porque ele é a referência usada para calcular quantas porções de cada prato
-ainda podem ser feitas.
+- Armazenamento em nuvem
+- Persistência de dados
+- Sincronização em tempo real
+- Estrutura escalável para futuras funcionalidades
 
-## Estrutura
+---
 
-```
-src/
-  environments/
-    environment.ts             # Credenciais do Firebase (preencher aqui)
-  app/
-    core/
-      firebase.ts               # Inicialização do Firebase App + Firestore
-    models/
-      menu-item.model.ts        # Interfaces do cardápio (MenuItem, MenuTemplate, IngredienteUsado)
-      administrador.model.ts    # Administrador (coleção "administradores")
-      estoque.model.ts          # ItemEstoque (coleção "estoque")
-      fornecedor.model.ts       # Fornecedor (coleção "fornecedores")
-    services/
-      menu.service.ts           # Estado do cardápio (Signals) + lógica de ingredientes/estoque + fallback offline
-      cardapio-firestore.service.ts  # Sincronização da coleção "cardapio" com o Firestore
-      navegacao.service.ts      # Controla qual módulo está ativo
-      administradores.service.ts
-      estoque.service.ts
-      fornecedores.service.ts
-    components/
-      header/                   # Barra superior + header laranja + aviso de modo offline
-      modulo-nav/                # Botões de navegação entre os módulos
-      list-view/ form-view/ saved-items-view/   # Telas do cardápio (form-view tem a aba Ingredientes)
-      admin-view/                # Tela de Administradores (CRUD no Firestore)
-      estoque-view/              # Tela de Estoque (CRUD no Firestore)
-      fornecedores-view/         # Tela de Fornecedores (CRUD no Firestore)
-  main.ts
-  styles.scss
-  index.html
+## 🛠️ Tecnologias Utilizadas
+
+- Angular
+- TypeScript
+- HTML5
+- CSS3
+- Firebase
+- Cloud Firestore
+- RxJS
+
+---
+
+## 📂 Estrutura do Banco de Dados
+
+### Coleção: cardapio
+
+```json
+{
+  "name": "X-Bacon",
+  "description": "Hambúrguer artesanal",
+  "price": 35.9,
+  "imageUrl": "",
+  "categories": ["Lanches"],
+  "disponivel": true,
+  "ingredientes": [
+    {
+      "estoqueId": "abc123",
+      "nome": "Pão",
+      "unidade": "un",
+      "quantidade": 1
+    }
+  ]
+}
 ```
 
-## Estrutura das coleções no Firestore
+### Coleção: estoque
 
-```
-cardapio
-  └── id (auto)
-        name: string
-        description?: string
-        categories: string[]
-        days: number[]              // dias da semana em que o prato aparece (1-7)
-        price: number
-        imageUrl?: string
-        ingredientes?: [
-          { estoqueId: string, nome: string, unidade: string, quantidade: number }
-        ]
-
-administradores
-  └── uid_admin (auto)
-        nome: string
-        email: string
-        permissao: 'admin' | 'gerente' | 'funcionario'
-
-estoque
-  └── id (auto)
-        nome: string
-        quantidade: number
-        unidade: string
-        estoqueMinimo: number
-
-fornecedores
-  └── id (auto)
-        nome: string
-        contato: string
-        produtoFornecido: string
-        ativo: boolean
+```json
+{
+  "nome": "Pão",
+  "quantidade": 100,
+  "unidade": "un"
+}
 ```
 
-As coleções e documentos são criados automaticamente pelo app na primeira vez
-que você cadastrar algo por cada tela — não é preciso criá-las manualmente no Console.
+---
 
-## Como rodar
+## ⚙️ Configuração do Projeto
 
 ### Pré-requisitos
-- Node.js 18+ instalado
-- Angular CLI 19
 
-### Instalação e execução
+- Node.js 18+
+- npm
+- Angular CLI
+- Conta Firebase
+
+### Instalação
+
+Clone o repositório:
+
+```bash
+git clone <url-do-repositorio>
+```
+
+Acesse a pasta do projeto:
+
+```bash
+cd gerencia-alatree
+```
+
+Instale as dependências:
 
 ```bash
 npm install
-npm start
 ```
 
-Abra [http://localhost:4200](http://localhost:4200) no navegador.
-
-### Build de produção
+Instale o Firebase:
 
 ```bash
-npm run build
+npm install firebase
 ```
 
-Os arquivos finais estarão em `dist/boteco-cardapio/browser/`.
+Execute o projeto:
 
-## Logo
+```bash
+ng serve
+```
 
-Coloque o arquivo `logo-boteco-da-arvore.jpg` dentro da pasta `public/assets/`.
+Acesse:
 
-## Tecnologias
+```text
+http://localhost:4200
+```
 
-- Angular 19 (Standalone Components)
-- Angular Signals para gerenciamento de estado
-- Firebase Firestore (SDK modular `firebase`) para persistência em nuvem
-- TypeScript 5.6
-- SCSS
-- localStorage como modelos salvos do cardápio e como fallback automático do
-  Cardápio quando o Firestore está indisponível (modo offline)
+---
 
-# Gerencia-a-la-tree1
+## 🔥 Configuração do Firebase
+
+No arquivo:
+
+```text
+src/environments/environment.ts
+```
+
+Configure as credenciais do projeto Firebase:
+
+```typescript
+firebaseConfig: {
+  apiKey: "SUA_API_KEY",
+  authDomain: "SEU_PROJETO.firebaseapp.com",
+  projectId: "SEU_PROJETO",
+  storageBucket: "SEU_PROJETO.firebasestorage.app",
+  messagingSenderId: "SEU_ID",
+  appId: "SEU_APP_ID"
+}
+```
+
+---
+
+## 📈 Melhorias Futuras
+
+- Controle de pedidos
+- Painel da cozinha
+- Baixa automática de estoque
+- Controle de usuários
+- Níveis de acesso
+- Dashboard administrativo
+- Relatórios gerenciais
+- Controle de fornecedores
+- Histórico de movimentação de estoque
+
+---
+
+## 👨‍💻 Autor
+
+**Rafael Alves**
+
+Desenvolvedor responsável pela análise, modelagem, implementação e integração do sistema Gerência À La Tree, incluindo as funcionalidades de gerenciamento de cardápio, estoque e banco de dados Firebase Firestore.
+
+---
+
+## 📄 Licença
+
+Este projeto foi desenvolvido para fins acadêmicos e educacionais.
