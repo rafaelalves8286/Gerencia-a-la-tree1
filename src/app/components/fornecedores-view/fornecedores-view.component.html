@@ -1,0 +1,71 @@
+<div class="view-content">
+  <div class="view-header">
+    <span class="view-title">Fornecedores <small>(Firestore)</small></span>
+    <button class="add-btn" (click)="abrirNovo()">+ Novo Fornecedor</button>
+  </div>
+
+  @if (service.erro()) {
+    <div class="alert-erro">{{ service.erro() }}</div>
+  }
+
+  @if (service.carregando()) {
+    <div class="empty-state"><p>Carregando fornecedores...</p></div>
+  } @else if (service.fornecedores().length === 0) {
+    <div class="empty-state"><p>Nenhum fornecedor cadastrado ainda.</p></div>
+  } @else {
+    <div class="card-list">
+      @for (f of service.fornecedores(); track f.id) {
+        <div class="item-card">
+          <div class="item-img">🚚</div>
+          <div class="item-info">
+            <div class="item-row">
+              <span class="item-name">{{ f.nome }}</span>
+            </div>
+            <div class="item-sub">{{ f.contato }}</div>
+            <div class="tags-row">
+              @if (f.produtoFornecido) {
+                <span class="tag">{{ f.produtoFornecido }}</span>
+              }
+              <span class="tag" [class.tag-off]="!f.ativo">
+                {{ f.ativo ? 'Ativo' : 'Inativo' }}
+              </span>
+            </div>
+          </div>
+          <div class="actions-wrap">
+            <button class="edit-btn" (click)="abrirEdicao(f)" title="Editar">✎</button>
+            <button class="delete-btn" (click)="excluir(f)" title="Excluir">🗑</button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
+
+@if (mostrarForm()) {
+  <div class="modal-backdrop" (click)="fechar()">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+      <div class="modal-title">{{ editandoId() ? 'Editar Fornecedor' : 'Novo Fornecedor' }}</div>
+
+      <span class="form-label">NOME</span>
+      <input type="text" class="form-input" placeholder="Ex: Distribuidora Sabor & Cia" [(ngModel)]="nomeValue">
+
+      <span class="form-label">CONTATO</span>
+      <input type="text" class="form-input" placeholder="Telefone ou e-mail" [(ngModel)]="contatoValue">
+
+      <span class="form-label">PRODUTO FORNECIDO</span>
+      <input type="text" class="form-input" placeholder="Ex: Carnes, Bebidas..." [(ngModel)]="produtoFornecidoValue">
+
+      <label class="checkbox-row">
+        <input type="checkbox" [(ngModel)]="ativoValue">
+        Fornecedor ativo
+      </label>
+
+      <div class="modal-actions">
+        <button class="btn-secundario" (click)="fechar()">Cancelar</button>
+        <button class="btn-primario" [disabled]="salvando()" (click)="salvar()">
+          {{ salvando() ? 'Salvando...' : 'Salvar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

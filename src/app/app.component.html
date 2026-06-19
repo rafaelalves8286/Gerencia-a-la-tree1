@@ -1,0 +1,29 @@
+<div class="phone-container">
+  <app-header />
+  <app-modulo-nav />
+
+  @switch (nav.moduloAtivo()) {
+    @case ('cardapio') {
+      @switch (menu.currentView()) {
+        @case ('list') {
+          <app-list-view />
+        }
+        @case ('form') {
+          <app-form-view />
+        }
+        @case ('saved') {
+          <app-saved-items-view />
+        }
+      }
+    }
+    @case ('admins') {
+      <app-admin-view />
+    }
+    @case ('estoque') {
+      <app-estoque-view />
+    }
+    @case ('fornecedores') {
+      <app-fornecedores-view />
+    }
+  }
+</div>

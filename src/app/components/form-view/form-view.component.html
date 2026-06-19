@@ -1,0 +1,181 @@
+<div class="form-view">
+
+  <!-- Abas -->
+  <div class="form-tabs">
+    <button class="form-tab-btn" [class.active]="abaAtiva() === 'detalhes'" (click)="selecionarAba('detalhes')">
+      Detalhes
+    </button>
+    <button class="form-tab-btn" [class.active]="abaAtiva() === 'ingredientes'" (click)="selecionarAba('ingredientes')">
+      Ingredientes
+      @if (menu.formIngredientes().length > 0) {
+        <span class="tab-badge">{{ menu.formIngredientes().length }}</span>
+      }
+    </button>
+  </div>
+
+  @if (abaAtiva() === 'detalhes') {
+
+  <!-- Image upload -->
+  <div>
+    <span class="form-label">FOTO DO ITEM</span>
+    <div class="img-upload-area" (click)="triggerFileInput()">
+      @if (menu.formImage()) {
+        <img [src]="menu.formImage()!" alt="Preview" class="preview-img">
+      } @else {
+        <div class="upload-placeholder">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+          <span>Toque para fazer upload de uma foto do item</span>
+        </div>
+      }
+    </div>
+    <input #fileInput type="file" accept="image/*" style="display:none" (change)="handleFileSelect($event)">
+  </div>
+
+  <!-- Name -->
+  <div>
+    <span class="form-label">NOME DO ITEM</span>
+    <input type="text" class="form-input" placeholder="Ex: Frango Grelhado com Legumes"
+           [(ngModel)]="name">
+  </div>
+
+  <!-- Description -->
+  <div>
+    <span class="form-label">DESCRIÇÃO</span>
+    <textarea class="form-textarea" rows="3"
+              placeholder="Descreva os ingredientes ou detalhes do prato..."
+              [(ngModel)]="desc"></textarea>
+  </div>
+
+  <!-- Categories + Price -->
+  <div class="cat-price-row">
+    <div style="flex:1">
+      <span class="form-label">CATEGORIAS</span>
+      <div class="cat-list">
+        @for (cat of menu.categoriesList; track cat) {
+          <div class="cat-item" (click)="menu.toggleFormCat(cat)">
+            <div class="cat-checkbox" [class.checked]="menu.formCats().includes(cat)">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </div>
+            <span class="cat-name">{{ cat }}</span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="price-wrap">
+      <span class="form-label">PREÇO</span>
+      <div class="price-input-row">
+        <span class="price-prefix">R$</span>
+        <input type="text" class="price-input" placeholder="0,00" [(ngModel)]="price">
+      </div>
+    </div>
+  </div>
+
+  <!-- Days -->
+  <div class="days-form-wrap">
+    <span class="form-label">DIAS DA SEMANA DISPONÍVEIS</span>
+    <div class="days-form-list">
+      @for (label of menu.dayLabels; track $index) {
+        <button class="day-form-btn"
+                [class.selected]="menu.formDays().includes($index + 1)"
+                (click)="menu.toggleFormDay($index + 1)">
+          {{ label }}
+        </button>
+      }
+    </div>
+  </div>
+
+  }
+
+  @if (abaAtiva() === 'ingredientes') {
+
+  <div class="ingredientes-intro">
+    Vincular ingredientes é opcional. Se não adicionar nenhum, o prato fica
+    sempre disponível e não controla o estoque. Se adicionar, cada pedido
+    desconta a quantidade informada do estoque automaticamente.
+  </div>
+
+  <!-- Lista de ingredientes já adicionados -->
+  @if (menu.formIngredientes().length > 0) {
+    <div class="ingredientes-list">
+      @for (ing of menu.formIngredientes(); track ing.estoqueId) {
+        <div class="ingrediente-row">
+          <span class="ingrediente-nome">{{ ing.nome }}</span>
+          <div class="ingrediente-qtd-wrap">
+            <input type="number" class="ingrediente-qtd-input" min="0" step="0.01"
+                   [ngModel]="ing.quantidade"
+                   (ngModelChange)="menu.atualizarQuantidadeIngrediente(ing.estoqueId, $event)">
+            <span class="ingrediente-unidade">{{ ing.unidade }}</span>
+          </div>
+          <button class="ingrediente-remove-btn" (click)="menu.removerIngrediente(ing.estoqueId)" title="Remover ingrediente">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="ingredientes-empty">Nenhum ingrediente vinculado a este prato.</div>
+  }
+
+  <!-- Adicionar novo ingrediente -->
+  <div class="add-ingrediente-box">
+    <span class="form-label">ADICIONAR INGREDIENTE DO ESTOQUE</span>
+    @if (menu.ingredientesDisponiveis().length === 0) {
+      <div class="ingredientes-empty">
+        @if (estoque.itens().length === 0) {
+          Nenhum item cadastrado no estoque ainda.
+        } @else {
+          Todos os itens do estoque já foram adicionados a este prato.
+        }
+      </div>
+    } @else {
+      <div class="add-ingrediente-row">
+        <select class="form-input" [(ngModel)]="novoIngredienteIdValue">
+          <option value="" disabled>Selecione um item</option>
+          @for (item of menu.ingredientesDisponiveis(); track item.id) {
+            <option [value]="item.id">{{ item.nome }} ({{ item.quantidade }} {{ item.unidade }} em estoque)</option>
+          }
+        </select>
+        <input type="number" class="form-input add-ingrediente-qtd" min="0" step="0.01"
+               placeholder="Qtd. por porção" [(ngModel)]="novoIngredienteQtdValue">
+        <button class="add-ingrediente-btn" (click)="adicionarIngrediente()"
+                [disabled]="!novoIngredienteIdValue || !novoIngredienteQtdValue">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Adicionar
+        </button>
+      </div>
+    }
+  </div>
+
+  }
+
+  <!-- Submit row -->
+  <div class="submit-row">
+    <button class="save-template-btn" (click)="menu.saveAsTemplate()" title="Salva permanentemente para usar depois">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+        <polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
+      </svg>
+      Salvar como Modelo
+    </button>
+    <button class="submit-btn"
+            [class.active]="menu.isFormValid()"
+            [disabled]="!menu.isFormValid()"
+            (click)="menu.submitItem()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+      Salvar no Cardápio
+    </button>
+  </div>
+
+</div>

@@ -1,0 +1,72 @@
+<div class="view-content">
+  <div class="view-header">
+    <span class="view-title">Estoque <small>(Firestore)</small></span>
+    <button class="add-btn" (click)="abrirNovo()">+ Novo Item</button>
+  </div>
+
+  @if (service.erro()) {
+    <div class="alert-erro">{{ service.erro() }}</div>
+  }
+
+  @if (service.carregando()) {
+    <div class="empty-state"><p>Carregando estoque...</p></div>
+  } @else if (service.itens().length === 0) {
+    <div class="empty-state"><p>Nenhum item no estoque ainda.</p></div>
+  } @else {
+    <div class="card-list">
+      @for (item of service.itens(); track item.id) {
+        <div class="item-card">
+          <div class="item-img">📦</div>
+          <div class="item-info">
+            <div class="item-row">
+              <span class="item-name">{{ item.nome }}</span>
+              <span class="item-price">{{ item.quantidade }} {{ item.unidade }}</span>
+            </div>
+            <div class="item-sub">Estoque mínimo: {{ item.estoqueMinimo }} {{ item.unidade }}</div>
+            @if (abaixoDoMinimo(item)) {
+              <div class="tags-row">
+                <span class="tag tag-alerta">Estoque baixo</span>
+              </div>
+            }
+          </div>
+          <div class="actions-wrap">
+            <button class="edit-btn" (click)="abrirEdicao(item)" title="Editar">✎</button>
+            <button class="delete-btn" (click)="excluir(item)" title="Excluir">🗑</button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
+
+@if (mostrarForm()) {
+  <div class="modal-backdrop" (click)="fechar()">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+      <div class="modal-title">{{ editandoId() ? 'Editar Item' : 'Novo Item de Estoque' }}</div>
+
+      <span class="form-label">NOME DO ITEM</span>
+      <input type="text" class="form-input" placeholder="Ex: Carne Bovina" [(ngModel)]="nomeValue">
+
+      <div class="row-2">
+        <div>
+          <span class="form-label">QUANTIDADE</span>
+          <input type="number" class="form-input" placeholder="0" [(ngModel)]="quantidadeValue">
+        </div>
+        <div>
+          <span class="form-label">UNIDADE</span>
+          <input type="text" class="form-input" placeholder="kg, un, L..." [(ngModel)]="unidadeValue">
+        </div>
+      </div>
+
+      <span class="form-label">ESTOQUE MÍNIMO</span>
+      <input type="number" class="form-input" placeholder="0" [(ngModel)]="estoqueMinimoValue">
+
+      <div class="modal-actions">
+        <button class="btn-secundario" (click)="fechar()">Cancelar</button>
+        <button class="btn-primario" [disabled]="salvando()" (click)="salvar()">
+          {{ salvando() ? 'Salvando...' : 'Salvar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

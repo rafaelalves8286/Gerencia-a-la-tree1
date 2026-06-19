@@ -1,0 +1,337 @@
+.form-view {
+  flex: 1;
+  padding: 16px 16px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #666;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.img-upload-area {
+  width: 100%;
+  height: 140px;
+  border: 1.5px dashed #ccc;
+  background: #f5f5f5;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.15s;
+  &:hover { border-color: #E27E0C; }
+}
+
+.upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #aaa;
+  span { font-size: 11px; text-align: center; padding: 0 16px; }
+}
+
+.preview-img { width: 100%; height: 100%; object-fit: cover; }
+
+.form-input, .form-textarea {
+  width: 100%;
+  border: 1.5px solid #ddd;
+  background: white;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-family: 'Inter', sans-serif;
+  outline: none;
+  transition: border-color 0.15s;
+  &:focus { border-color: #E27E0C; }
+}
+
+.form-textarea { resize: none; }
+
+.cat-price-row { display: flex; gap: 16px; align-items: flex-start; }
+
+.cat-list { display: flex; flex-direction: column; gap: 6px; }
+
+.cat-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.cat-checkbox {
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid #ccc;
+  border-radius: 3px;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  svg { display: none; }
+  &.checked { border-color: #E27E0C; background: #E27E0C; svg { display: block; } }
+}
+
+.cat-name { font-size: 11px; color: #444; }
+
+.price-wrap { width: 110px; }
+
+.price-input-row {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  background: white;
+  transition: border-color 0.15s;
+  &:focus-within { border-color: #E27E0C; }
+}
+
+.price-prefix {
+  background: #f0f0f0;
+  color: #555;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 8px;
+  border-right: 1px solid #ddd;
+  flex-shrink: 0;
+}
+
+.price-input {
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 8px;
+  font-size: 13px;
+  font-family: 'Inter', sans-serif;
+  width: 0;
+  flex: 1;
+}
+
+.days-form-wrap { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
+
+.days-form-list { display: flex; gap: 4px; width: 100%; }
+
+.day-form-btn {
+  flex: 1;
+  padding: 6px 0;
+  font-size: 10px;
+  font-weight: 700;
+  text-align: center;
+  border-radius: 6px;
+  background: #e8e8e8;
+  color: #555;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+  &.selected { background: #E27E0C; color: white; }
+}
+
+.submit-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  gap: 8px;
+}
+
+.save-template-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: 1.5px solid #A15827;
+  color: #A15827;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  &:hover { background: #fdf3eb; }
+}
+
+.submit-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1.5px solid #ccc;
+  color: #aaa;
+  background: white;
+  border-radius: 999px;
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: not-allowed;
+  transition: all 0.15s;
+  font-family: 'Inter', sans-serif;
+  &.active { border-color: #E27E0C; color: #E27E0C; cursor: pointer; &:hover { opacity: 0.85; } }
+}
+
+// ---- Abas (Detalhes / Ingredientes) ----
+
+.form-tabs {
+  display: flex;
+  gap: 4px;
+  background: #f0f0f0;
+  border-radius: 10px;
+  padding: 4px;
+}
+
+.form-tab-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: none;
+  background: transparent;
+  color: #777;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  padding: 8px 0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  &.active { background: white; color: #E27E0C; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+}
+
+.tab-badge {
+  background: #E27E0C;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}
+
+// ---- Ingredientes ----
+
+.ingredientes-intro {
+  font-size: 11px;
+  color: #888;
+  background: #fdf3eb;
+  border: 1px solid #f3dcc0;
+  border-radius: 8px;
+  padding: 10px 12px;
+  line-height: 1.5;
+}
+
+.ingredientes-empty {
+  font-size: 12px;
+  color: #aaa;
+  text-align: center;
+  padding: 16px 8px;
+}
+
+.ingredientes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ingrediente-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  border: 1.5px solid #eee;
+  border-radius: 10px;
+  padding: 8px 10px;
+}
+
+.ingrediente-nome {
+  flex: 1;
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ingrediente-qtd-wrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.ingrediente-qtd-input {
+  width: 64px;
+  border: 1.5px solid #ddd;
+  border-radius: 6px;
+  padding: 5px 6px;
+  font-size: 12px;
+  font-family: 'Inter', sans-serif;
+  text-align: right;
+  outline: none;
+  &:focus { border-color: #E27E0C; }
+}
+
+.ingrediente-unidade {
+  font-size: 11px;
+  color: #888;
+  width: 28px;
+}
+
+.ingrediente-remove-btn {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  padding: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+  &:hover { background: #fee2e2; }
+}
+
+.add-ingrediente-box {
+  border-top: 1px solid #eee;
+  padding-top: 14px;
+}
+
+.add-ingrediente-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.add-ingrediente-qtd { width: 100%; }
+
+.add-ingrediente-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1.5px solid #E27E0C;
+  color: #E27E0C;
+  background: white;
+  border-radius: 999px;
+  padding: 9px 0;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'Inter', sans-serif;
+  &:hover:not(:disabled) { background: #fdf3eb; }
+  &:disabled { opacity: 0.4; cursor: not-allowed; }
+}

@@ -1,0 +1,31 @@
+<div class="saved-view">
+  <input type="text" class="search-input" placeholder="Digite para buscar um prato salvo..."
+         [(ngModel)]="query">
+
+  <div class="saved-list">
+    @if (filtered.length === 0) {
+      <div class="empty-state">
+        <p>Nenhum item salvo encontrado.</p>
+      </div>
+    } @else {
+      @for (template of filtered; track $index) {
+        <div class="saved-item-row" (click)="loadTemplate(template)">
+          <div class="saved-item-info">
+            <div class="saved-item-name">{{ template.name }}</div>
+            <div class="saved-item-meta">
+              {{ template.categories.join(', ') }} • R$ {{ formatPrice(template.price) }}
+            </div>
+          </div>
+          <button class="delete-saved-btn"
+                  (click)="deleteTemplate($event, $index)"
+                  title="Excluir Modelo permanente">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+            </svg>
+          </button>
+        </div>
+      }
+    }
+  </div>
+</div>

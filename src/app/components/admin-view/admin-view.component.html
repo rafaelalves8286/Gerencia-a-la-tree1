@@ -1,0 +1,65 @@
+<div class="view-content">
+  <div class="view-header">
+    <span class="view-title">Administradores <small>(Firestore)</small></span>
+    <button class="add-btn" (click)="abrirNovo()">+ Novo Admin</button>
+  </div>
+
+  @if (service.erro()) {
+    <div class="alert-erro">{{ service.erro() }}</div>
+  }
+
+  @if (service.carregando()) {
+    <div class="empty-state"><p>Carregando administradores...</p></div>
+  } @else if (service.administradores().length === 0) {
+    <div class="empty-state"><p>Nenhum administrador cadastrado ainda.</p></div>
+  } @else {
+    <div class="card-list">
+      @for (a of service.administradores(); track a.id) {
+        <div class="item-card">
+          <div class="item-img">👤</div>
+          <div class="item-info">
+            <div class="item-row">
+              <span class="item-name">{{ a.nome }}</span>
+            </div>
+            <div class="item-sub">{{ a.email }}</div>
+            <div class="tags-row">
+              <span class="tag">{{ a.permissao }}</span>
+            </div>
+          </div>
+          <div class="actions-wrap">
+            <button class="edit-btn" (click)="abrirEdicao(a)" title="Editar">✎</button>
+            <button class="delete-btn" (click)="excluir(a)" title="Excluir">🗑</button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
+
+@if (mostrarForm()) {
+  <div class="modal-backdrop" (click)="fechar()">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+      <div class="modal-title">{{ editandoId() ? 'Editar Administrador' : 'Novo Administrador' }}</div>
+
+      <span class="form-label">NOME</span>
+      <input type="text" class="form-input" placeholder="Ex: Rafael Souza" [(ngModel)]="nomeValue">
+
+      <span class="form-label">E-MAIL</span>
+      <input type="email" class="form-input" placeholder="exemplo@boteco.com" [(ngModel)]="emailValue">
+
+      <span class="form-label">PERMISSÃO</span>
+      <select class="form-input" [(ngModel)]="permissaoValue">
+        @for (n of niveis; track n) {
+          <option [value]="n">{{ n }}</option>
+        }
+      </select>
+
+      <div class="modal-actions">
+        <button class="btn-secundario" (click)="fechar()">Cancelar</button>
+        <button class="btn-primario" [disabled]="salvando()" (click)="salvar()">
+          {{ salvando() ? 'Salvando...' : 'Salvar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

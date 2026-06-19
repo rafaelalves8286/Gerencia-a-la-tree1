@@ -1,0 +1,10 @@
+<div class="modulo-nav">
+  @for (m of modulos; track m.id) {
+    <button
+      class="modulo-btn"
+      [class.active]="nav.moduloAtivo() === m.id"
+      (click)="selecionar(m.id)">
+      {{ m.label }}
+    </button>
+  }
+</div>
